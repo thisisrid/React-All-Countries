@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Cart from './Components/Cart/Cart';
+import Country from './Components/Country/Country';
 
 function App() {
+  const [countries, setCountries]= useState([]);
+  const [info, setInfo] = useState([]);
+
+  useEffect(()=> {
+fetch("https://restcountries.eu/rest/v2/all")
+.then(res => res.json())
+.then(data => setCountries(data))
+.catch(err => console.log(err))
+  }, [])
+
+
+const clickHandle = (countryInfo) => {
+ const newInfo = [...info, countryInfo ];
+  setInfo(newInfo);
+}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <h1>All Countries: {countries.length}
+      </h1>
+      
+      <Cart info={info}></Cart>
+  <div className="country">
+     {countries.map((country) => <Country country={country} clickHandle={clickHandle}> </Country>
+      )}
+      </div>
+      
     </div>
   );
 }
